@@ -5,26 +5,35 @@ import { Order } from "../../../types/orderTypes.ts";
 import { dateFormatter } from "../../../utils/dateFormatter.ts";
 import { Typography } from "../../ui/Typography/Typography.tsx";
 import s from './orderTable.module.css';
+import {toast} from "react-toastify";
 
 type OrdersTableTypes = {
-    isSubmit: boolean
+    isSubmit: boolean;
+    userId: string
 }
 
-export const OrdersTable: FC<OrdersTableTypes> = ({isSubmit}): React.JSX.Element | null => {
+export const OrdersTable: FC<OrdersTableTypes> = ({isSubmit,userId}): React.JSX.Element | null => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         (async ():Promise<void> => {
-            const response = await getOrdersByUserId("67af229f0811e4570842537c");
-            if (response && response?.data) {
-                setOrders(response.data);
-            }else {
-                setOrders([])
+            try{
+                const response = userId && await getOrdersByUserId(userId);
+                if (response && response?.data) {
+                    setOrders(response.data);
+                }else {
+                    setOrders([])
+                }
+            }catch(error) {
+                if ((error as { message?: string })?.message) {
+                    toast((error as { message?: string })?.message);
+                }
             }
+
             setLoading(false);
         })();
-    }, [isSubmit]);
+    }, [isSubmit, userId]);
 
 
     if (loading) return <Typography variant="p" className={s.loader}>Загрузка...</Typography>;

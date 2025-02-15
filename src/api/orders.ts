@@ -7,8 +7,12 @@ export const getOrdersByUserId = async (userId: string): Promise<AxiosResponse<O
     try {
         const response = await axios.get<AxiosResponse<Order[]>>(`/orders/${userId}`);
         return response.data
-    } catch {
-        return null
+    } catch(error) {
+        if (error instanceof AxiosError) {
+            throw new Error(error?.response?.data?.data?.message);
+        } else {
+            throw new Error("Something went wrong");
+        }
     }
 }
 
@@ -19,7 +23,7 @@ export const createOrder = async (data: { userId: string; productId: string; qua
         if (error instanceof AxiosError) {
             throw new Error(error?.response?.data?.data?.message);
         } else {
-            throw new Error("Неизвестная ошибка");
+            throw new Error("Something went wrong");
         }
     }
 };

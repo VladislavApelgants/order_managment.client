@@ -6,3 +6,14 @@
     font-size: 44px;
     margin-bottom: 24px;
 }
+.service_container {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 32px;
+}
+.test {
+    font-size: 28px;
+    text-align: center;
+}
